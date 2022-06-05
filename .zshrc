@@ -1,4 +1,4 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Enable Powerlevel11k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -9,14 +9,10 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/anirudh/.oh-my-zsh"
-export PATH=$HOME/Documents/dev/flutter/bin:$PATH
-
-setopt PROMPT_CR
-
-setopt PROMPT_SP
-
-export PROMPT_EOL_MARK=""
+export ZSH="$HOME/.oh-my-zsh"
+export GDK_DPI_SCALE=1.0
+export DISPLAY=$(ip route list default | awk '{print $3}'):0
+export LIBGL_ALWAYS_INDIRECT=1
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -86,8 +82,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git
-    zsh-syntax-highlighting
     zsh-autosuggestions
+    zsh-syntax-highlighting
+    nvm
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -117,11 +114,58 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+cd /mnt/c/Users/Anirudh
+# vi mode
+bindkey -v
+export KEYTIMEOUT=1
 
-function rjava() {
- javac $1.java  && java $1
-}
+# vim mode config
+    # ---------------
+
+    # Activate vim mode.
+    bindkey -v
+
+    # Remove mode switching delay.
+    KEYTIMEOUT=5
+
+    # Change cursor shape for different vi modes.
+    function zle-keymap-select {
+      if [[ ${KEYMAP} == vicmd ]] ||
+         [[ $1 = 'block' ]]; then
+        echo -ne '\e[1 q'
+
+      elif [[ ${KEYMAP} == main ]] ||
+           [[ ${KEYMAP} == viins ]] ||
+           [[ ${KEYMAP} = '' ]] ||
+           [[ $1 = 'beam' ]]; then
+        echo -ne '\e[5 q'
+      fi
+    }
+    zle -N zle-keymap-select
+
+    # Use beam shape cursor on startup.
+    echo -ne '\e[5 q'
+
+    # Use beam shape cursor for each new prompt.
+    preexec() {
+       echo -ne '\e[5 q'
+    }
+
+if grep -q WSL2 /proc/version; then
+    # execute route.exe in the windows to determine its IP address
+     DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+
+else
+    # In WSL1 the DISPLAY can be the localhost address
+    if grep -q icrosoft /proc/version; then
+        DISPLAY=127.0.0.1:0.0
+    fi
+
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
