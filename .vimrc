@@ -1,8 +1,7 @@
 syntax on
-
 set noerrorbells
 set tabstop=2 softtabstop=2
-set shiftwidth=4
+set shiftwidth=2
 set expandtab
 set smartindent
 set nu
@@ -12,38 +11,52 @@ set noswapfile
 set expandtab
 set autoindent
 set mouse=a
+set clipboard=unnamedplus
 
-inoremap jj <Esc>
+" if exists('$TMUX')
+  let &t_SI = "\<Esc>[5 q"
+  let &t_EI = "\<Esc>[1 q"  
+" endif
 
 call plug#begin()
 Plug 'jparise/vim-graphql'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tasn/vim-tsx'
 Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install --frozen-lockfile --production',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html', 'javascriptreact', 'typescriptreact'] }
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html', 'javascriptreact', 'typescriptreact', 'cpp'] }
 Plug 'jiangmiao/auto-pairs'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
-Plug 'overcache/NeoSolarized'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'reedes/vim-colors-pencil'
+Plug 'romgrk/doom-one.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'tribela/vim-transparent'
+Plug 'morhetz/gruvbox'
+Plug 'vv9k/vim-github-dark'
+Plug 'OmniSharp/omnisharp-vim'
 call plug#end()
-
+  
 set termguicolors
-hi Normal guibg=NONE ctermbg=NONE
+colorscheme gruvbox 
+set bg=dark
 
-let g:prettier#autoformat = 0
+" highlight Normal guibg=NONE ctermbg=NONE
+" highlight clear LineNr 
+
+filetype plugin indent on
+
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
 let g:prettier#config#tab_width = 2
 let g:prettier#config#use_tabs = 'false'
 let g:prettier#config#semi = 'true'
 let g:prettier#config#single_quote = 'true'
 
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+inoremap jj <Esc>
+nmap ;; <CMD>CocCommand explorer<CR>
+
 
 inoremap <silent><expr> <c-space> coc#refresh()
 " use <tab> for trigger completion and navigate to the next complete item
@@ -57,3 +70,5 @@ inoremap <silent><expr> <Tab>
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
 
+nmap <silent> [e <Plug>(coc-diagnostic-prev)
+nmap <silent> ]e <Plug>(coc-diagnostic-next)
