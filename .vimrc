@@ -18,6 +18,8 @@ set clipboard=unnamedplus
   let &t_EI = "\<Esc>[1 q"  
 " endif
 
+let g:rainbow_active = 1
+
 call plug#begin()
 Plug 'jparise/vim-graphql'
 Plug 'tasn/vim-tsx'
@@ -36,16 +38,19 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'tribela/vim-transparent'
 Plug 'morhetz/gruvbox'
 Plug 'vv9k/vim-github-dark'
+Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'OmniSharp/omnisharp-vim'
+Plug 'ghifarit53/tokyonight-vim'
 call plug#end()
   
 set termguicolors
-colorscheme gruvbox 
+colorscheme tokyonight 
 set bg=dark
 
 " highlight Normal guibg=NONE ctermbg=NONE
 " highlight clear LineNr 
 
+filetype off
 filetype plugin indent on
 
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
@@ -72,3 +77,14 @@ inoremap <silent><expr> <Tab>
 
 nmap <silent> [e <Plug>(coc-diagnostic-prev)
 nmap <silent> ]e <Plug>(coc-diagnostic-next)
+
+nnoremap <M-S-c> "+y  " Normal (must follow with an operator)
+xnoremap <M-S-c> "+y  " Visual
+nnoremap <M-S-v> "+p  " Normal
+noremap! <M-S-v> <C-r>+  " Insert and Command line
+inoremap <M-S-v> <C-r>+  " Insert
+
+
+let g:rainbow_active = 1
+
+hi Visual  guifg=#000000 guibg=#FFFFFF gui=none
